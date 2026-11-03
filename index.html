@@ -41,6 +41,10 @@
         window.addEventListener('load', scrollToTopNow);
         window.addEventListener('pageshow', (e) => { if (e.persisted) scrollToTopNow(); });
     </script>
+    <!-- Theme: restore the saved choice before first paint (dark is the default) -->
+    <script>
+        try { if (localStorage.getItem('theme') === 'light') { document.documentElement.classList.remove('dark'); document.documentElement.classList.add('light'); } } catch (e) {}
+    </script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -49,19 +53,20 @@
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#03100f',
+                        darkBg: 'rgb(var(--bg) / <alpha-value>)',
+                        surface: 'rgb(var(--surface) / <alpha-value>)',
                         cardBg: 'rgba(8, 30, 32, 0.65)',
                         neonBlue: '#22e0a0',
                         neonViolet: '#aaf0e2',
                         neonCyan: '#00bfae',
                         /* Cyber Teal */
-                        cyber: { 50:'#ecfffc',100:'#cffff7',200:'#a0fff0',300:'#5eeedd',400:'#1fd9c6',500:'#00bfae',600:'#00998e',700:'#007a72',800:'#00605b',900:'#004a47' },
+                        cyber: { 50:'#ecfffc',100:'#cffff7',200:'#a0fff0',300:'#5eeedd',400:'rgb(var(--cyber-400) / <alpha-value>)',500:'#00bfae',600:'#00998e',700:'#007a72',800:'#00605b',900:'rgb(var(--cyber-900) / <alpha-value>)' },
                         /* Aqua Foam */
-                        foam:  { 50:'#f2fffc',100:'#e0fbf5',200:'#c9f7ee',300:'#aaf0e2',400:'#8fe8d6',500:'#6fdcc8',600:'#4fc2ae',700:'#3a9d8d',800:'#2c7a6e',900:'#1f5a52' },
+                        foam:  { 50:'#f2fffc',100:'#e0fbf5',200:'#c9f7ee',300:'#aaf0e2',400:'rgb(var(--foam-400) / <alpha-value>)',500:'#6fdcc8',600:'#4fc2ae',700:'#3a9d8d',800:'#2c7a6e',900:'rgb(var(--foam-900) / <alpha-value>)' },
                         /* Electric Seafoam (added accent) */
-                        mint:  { 50:'#effff8',100:'#d3ffeb',200:'#a8fad6',300:'#74f2bd',400:'#3fe8a5',500:'#22e0a0',600:'#12b883',700:'#0e9468',800:'#0b7253',900:'#095a43' },
+                        mint:  { 50:'#effff8',100:'#d3ffeb',200:'#a8fad6',300:'#74f2bd',400:'rgb(var(--mint-400) / <alpha-value>)',500:'#22e0a0',600:'#12b883',700:'#0e9468',800:'#0b7253',900:'rgb(var(--mint-900) / <alpha-value>)' },
                         /* Teal-tinted neutrals */
-                        slate: { 50:'#f0fdfa',100:'#ddf7f2',200:'#bfe8e2',300:'#9ccfca',400:'#7aaeaa',500:'#5a8a88',600:'#3f6563',700:'#2a4a4a',800:'#16302f',900:'#0a1f1f',950:'#041211' },
+                        slate: { 50:'rgb(var(--slate-50) / <alpha-value>)', 100:'rgb(var(--slate-100) / <alpha-value>)', 200:'rgb(var(--slate-200) / <alpha-value>)', 300:'rgb(var(--slate-300) / <alpha-value>)', 400:'rgb(var(--slate-400) / <alpha-value>)', 500:'rgb(var(--slate-500) / <alpha-value>)', 600:'rgb(var(--slate-600) / <alpha-value>)', 700:'rgb(var(--slate-700) / <alpha-value>)', 800:'rgb(var(--slate-800) / <alpha-value>)', 900:'rgb(var(--slate-900) / <alpha-value>)', 950:'rgb(var(--slate-950) / <alpha-value>)' },
                     },
                     fontFamily: {
                         sans: ['Space Grotesk', 'Inter', 'sans-serif'],
@@ -184,6 +189,87 @@
             pointer-events: none;
         }
 
+
+        /* ===== Theme variables (dark = default, light = html.light) ===== */
+        :root { --slate-50:240 253 250;--slate-100:221 247 242;--slate-200:191 232 226;--slate-300:156 207 202;--slate-400:122 174 170;--slate-500:90 138 136;--slate-600:63 101 99;--slate-700:42 74 74;--slate-800:22 48 47;--slate-900:10 31 31;--slate-950:4 18 17;--cyber-400:31 217 198;--mint-400:63 232 165;--foam-400:143 232 214;--cyber-900:0 74 71;--mint-900:9 90 67;--foam-900:31 90 82;--bg:3 16 15;--surface:5 25 26; }
+        html.light { --slate-50:3 26 24;--slate-100:6 40 42;--slate-200:10 58 58;--slate-300:23 80 78;--slate-400:47 107 104;--slate-500:79 136 133;--slate-600:143 185 181;--slate-700:185 217 213;--slate-800:213 235 232;--slate-900:230 244 242;--slate-950:244 251 250;--cyber-400:0 133 121;--mint-400:11 138 95;--foam-400:42 143 128;--cyber-900:189 238 232;--mint-900:196 243 223;--foam-900:203 238 230;--bg:244 251 250;--surface:232 246 244; color-scheme: light; }
+        html.dark { color-scheme: dark; }
+
+
+        /* ===== Light / dark sliding switch ===== */
+        .theme-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            padding: 0;
+            border-radius: 9999px;
+            border: 1px solid rgba(122, 174, 170, 0.45);
+            background: rgba(10, 31, 31, 0.9);
+            cursor: pointer;
+            transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
+        }
+        .theme-switch:hover { box-shadow: 0 0 12px rgba(0, 191, 174, 0.45); }
+        .theme-switch:focus-visible { outline: 2px solid #00bfae; outline-offset: 2px; }
+        .theme-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #03100f;
+            background: linear-gradient(135deg, #aaf0e2, #00bfae);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            transition: transform .35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html.light .theme-switch {
+            background: rgba(0, 191, 174, 0.25);
+            border-color: rgba(0, 150, 135, 0.55);
+        }
+        html.light .theme-knob {
+            transform: translateX(24px);
+            color: #ffffff;
+            background: linear-gradient(135deg, #00bfae, #009a8c);
+            box-shadow: 0 2px 6px rgba(0, 100, 90, 0.35);
+        }
+
+        /* ===== Light mode ===== */
+        html.light body { background-color: #f4fbfa; color: #06282a; }
+        html.light .glass-panel {
+            background: rgba(255, 255, 255, 0.72);
+            border-color: rgba(0, 150, 135, 0.22);
+            box-shadow: 0 8px 32px 0 rgba(0, 100, 90, 0.10);
+        }
+        html.light .glass-panel-hover:hover {
+            border-color: rgba(0, 150, 135, 0.5);
+            box-shadow: 0 0 25px rgba(0, 191, 174, 0.25);
+        }
+        html.light header .glass-panel { box-shadow: 0 8px 30px rgba(0, 100, 90, 0.15); }
+        html.light .grid-bg {
+            background-image:
+                linear-gradient(to right, rgba(0, 150, 135, 0.09) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 150, 135, 0.09) 1px, transparent 1px);
+        }
+        html.light .spotlight {
+            background: radial-gradient(circle at 50% 0%, rgba(0, 191, 174, 0.16) 0%, rgba(34, 224, 160, 0.08) 35%, transparent 70%);
+        }
+        html.light ::-webkit-scrollbar-track { background: #f4fbfa; }
+        html.light ::-webkit-scrollbar-thumb { background: #b9d9d5; }
+        html.light ::-webkit-scrollbar-thumb:hover { background: #00bfae; }
+        html.light .text-white,
+        html.light .hover\:text-white:hover { color: #06282a; }
+
+        /* keep the switch knob sliding while the page colours fade */
+        html.theme-anim .theme-knob { transition: transform .35s cubic-bezier(0.4, 0, 0.2, 1), background .35s ease, color .35s ease, box-shadow .35s ease !important; }
+
+        /* Smooth colour change when the toggle is pressed */
+        html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
+            transition: background-color .35s ease, border-color .35s ease, color .35s ease, box-shadow .35s ease !important;
+        }
+
         /* ===== Responsive fixes ===== */
         /* Hero: use the small viewport height so mobile browser toolbars don't cause jumps */
         #home {
@@ -226,7 +312,7 @@
 <body class="bg-darkBg text-slate-100 selection:bg-foam-500 selection:text-white">
 
     <!-- Cinematic Preloader -->
-    <div class="preloader fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#03100f] px-4">
+    <div class="preloader fixed inset-0 z-50 flex flex-col items-center justify-center bg-darkBg px-4">
         <div class="absolute inset-0 spotlight pointer-events-none"></div>
         <div class="relative z-10 flex flex-col items-center max-w-sm w-full">
             <div class="text-4xl md:text-6xl font-black tracking-tighter bg-gradient-to-r from-mint-400 via-foam-400 to-cyber-400 bg-clip-text text-transparent mb-6 animate-pulse">
@@ -260,7 +346,8 @@
 
             <!-- Hire Me CTA & Mobile Toggle -->
             <div class="flex items-center space-x-3">
-                <a href="#contact" class="hidden sm:inline-flex items-center justify-center px-5 py-2 rounded-full font-bold text-xs tracking-wider uppercase bg-foam-300 text-slate-900 hover:bg-foam-100 transition-all shadow-md">
+                <button id="theme-toggle" type="button" role="switch" aria-checked="false" class="theme-switch shrink-0 focus:outline-none" aria-label="Switch to light mode" title="Switch to light mode"><span class="theme-knob"><span id="theme-icon" class="flex items-center justify-center"></span></span></button>
+                <a href="#contact" class="hidden sm:inline-flex items-center justify-center px-5 py-2 rounded-full font-bold text-xs tracking-wider uppercase bg-[#aaf0e2] text-[#0a1f1f] hover:bg-[#e0fbf5] transition-all shadow-md">
                     Hire Me
                 </a>
                 <button id="menu-toggle" class="md:hidden text-slate-300 hover:text-white p-1 focus:outline-none" aria-label="Toggle Menu">
@@ -271,7 +358,7 @@
     </header>
 
     <!-- Mobile Fullscreen Menu Tray -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 bg-[#03100f]/95 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 px-6 transform translate-x-full transition-transform duration-300 md:hidden">
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-darkBg/95 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 px-6 transform translate-x-full transition-transform duration-300 md:hidden">
         <button id="menu-close" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2">
             <i class="ph ph-x text-3xl"></i>
         </button>
@@ -279,7 +366,7 @@
         <a href="#about" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">About</a>
         <a href="#projects" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Projects</a>
         <a href="#contact" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Contact</a>
-        <a href="#contact" class="mobile-nav-link px-8 py-3 rounded-full font-bold text-sm bg-foam-300 text-slate-900 shadow-lg">Hire Me</a>
+        <a href="#contact" class="mobile-nav-link px-8 py-3 rounded-full font-bold text-sm bg-[#aaf0e2] text-[#0a1f1f] shadow-lg">Hire Me</a>
     </div>
 
     <!-- Hero Section -->
@@ -305,7 +392,7 @@
                     Crafting responsive, performant, and delightful web interfaces with modern JavaScript, CSS animation, and clean architecture.
                 </p>
                 <div class="hero-cta flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4 hero-animate-init">
-                    <a href="#projects" class="px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase bg-gradient-to-r from-mint-600 via-foam-600 to-cyber-600 text-slate-950 shadow-[0_0_30px_rgba(34,224,160,0.5)] hover:shadow-[0_0_40px_rgba(170,240,226,0.8)] transition-all transform hover:-translate-y-1">
+                    <a href="#projects" class="px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase bg-gradient-to-r from-mint-600 via-foam-600 to-cyber-600 text-[#041211] shadow-[0_0_30px_rgba(34,224,160,0.5)] hover:shadow-[0_0_40px_rgba(170,240,226,0.8)] transition-all transform hover:-translate-y-1">
                         Explore Work
                     </a>
                     <a href="#contact" class="px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase glass-panel text-slate-200 hover:text-white hover:bg-slate-800/80 transition-all border border-slate-700/60">
@@ -352,7 +439,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-28 px-6 md:px-12 relative bg-[#05191a]/80 border-t border-slate-800/50">
+    <section id="about" class="py-28 px-6 md:px-12 relative bg-surface/80 border-t border-slate-800/50">
         <div class="max-w-7xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
                 <span class="text-xs font-bold tracking-widest uppercase text-foam-400 px-3 py-1 rounded-full bg-foam-500/10 border border-foam-500/20">About Me</span>
@@ -422,7 +509,7 @@
     </section>
 
     <!-- Projects Section with Real URLs -->
-    <section id="projects" class="py-28 px-6 md:px-12 relative bg-[#03100f] overflow-hidden">
+    <section id="projects" class="py-28 px-6 md:px-12 relative bg-darkBg overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="space-y-4">
@@ -454,7 +541,7 @@
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-slate-400">
                                 <span>HTML</span> • <span>CSS</span> • <span>JavaScript</span>
                             </div>
-                            <a href="https://shoppingaura.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-cyber-400 hover:bg-cyber-500 hover:text-slate-950 transition-all shadow-[0_0_15px_rgba(0,191,174,0.3)] text-xs font-bold uppercase tracking-wider">
+                            <a href="https://shoppingaura.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-cyber-400 hover:bg-cyber-500 hover:text-[#041211] transition-all shadow-[0_0_15px_rgba(0,191,174,0.3)] text-xs font-bold uppercase tracking-wider">
                                 <span>Live Demo</span>
                                 <i class="ph ph-arrow-up-right text-sm"></i>
                             </a>
@@ -480,7 +567,7 @@
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-slate-400">
                                 <span>UI Design</span> • <span>JavaScript</span> • <span>Tailwind</span>
                             </div>
-                            <a href="https://coffeeshop-eosin-beta.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-mint-400 hover:bg-mint-500 hover:text-slate-950 transition-all shadow-[0_0_15px_rgba(34,224,160,0.3)] text-xs font-bold uppercase tracking-wider">
+                            <a href="https://coffeeshop-eosin-beta.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-mint-400 hover:bg-mint-500 hover:text-[#041211] transition-all shadow-[0_0_15px_rgba(34,224,160,0.3)] text-xs font-bold uppercase tracking-wider">
                                 <span>Live Demo</span>
                                 <i class="ph ph-arrow-up-right text-sm"></i>
                             </a>
@@ -506,7 +593,7 @@
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-slate-400">
                                 <span>Front-End</span> • <span>AI Solutions</span> • <span>Cloud</span>
                             </div>
-                            <a href="https://www.texsenss.com" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-foam-400 hover:bg-foam-500 hover:text-slate-950 transition-all shadow-[0_0_15px_rgba(170,240,226,0.3)] text-xs font-bold uppercase tracking-wider">
+                            <a href="https://www.texsenss.com" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-foam-400 hover:bg-foam-500 hover:text-[#041211] transition-all shadow-[0_0_15px_rgba(170,240,226,0.3)] text-xs font-bold uppercase tracking-wider">
                                 <span>Live Demo</span>
                                 <i class="ph ph-arrow-up-right text-sm"></i>
                             </a>
@@ -518,7 +605,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-28 px-6 md:px-12 relative bg-[#05191a]/80 border-t border-slate-800/50">
+    <section id="contact" class="py-28 px-6 md:px-12 relative bg-surface/80 border-t border-slate-800/50">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Left: Info & Real Email -->
@@ -562,7 +649,7 @@
                             </div>
                             <div class="min-w-0">
                                 <p class="text-xs text-slate-400 font-medium">Phone</p>
-                                <a href="tel:+251900000000" class="font-semibold text-sm hover:text-cyber-400 transition-colors">+251 923166984</a>
+                                <a href="tel:+251923166984" class="font-semibold text-sm hover:text-cyber-400 transition-colors">+251 923166984</a>
                             </div>
                         </div>
 
@@ -572,7 +659,7 @@
                             </div>
                             <div class="min-w-0">
                                 <p class="text-xs text-slate-400 font-medium">Telegram / Discord</p>
-                                <a href="https://t.me/Naod_07" target="_blank" rel="noopener noreferrer" class="font-semibold text-sm break-all hover:text-mint-400 transition-colors">@Naod_07 </a>
+                                <a href="https://t.me/Naod_07" target="_blank" rel="noopener noreferrer" class="font-semibold text-sm break-all hover:text-mint-400 transition-colors">@Naod_07</a>
                             </div>
                         </div>
                     </div>
@@ -609,7 +696,7 @@
                             <textarea id="form-message" rows="4" required placeholder="Write your message here..." class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyber-500 focus:ring-1 focus:ring-cyber-500 transition-all text-sm resize-none"></textarea>
                         </div>
 
-                        <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl font-bold text-sm tracking-wider uppercase bg-gradient-to-r from-mint-600 via-foam-600 to-cyber-600 hover:from-mint-500 hover:to-cyber-500 text-slate-950 shadow-[0_0_25px_rgba(34,224,160,0.5)] hover:shadow-[0_0_35px_rgba(170,240,226,0.8)] transition-all transform hover:-translate-y-0.5">
+                        <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl font-bold text-sm tracking-wider uppercase bg-gradient-to-r from-mint-600 via-foam-600 to-cyber-600 hover:from-mint-500 hover:to-cyber-500 text-[#041211] shadow-[0_0_25px_rgba(34,224,160,0.5)] hover:shadow-[0_0_35px_rgba(170,240,226,0.8)] transition-all transform hover:-translate-y-0.5">
                             Send Message
                         </button>
 
@@ -621,7 +708,7 @@
     </section>
 
     <!-- Footer Section -->
-    <footer class="py-12 px-6 md:px-12 bg-[#03100f] border-t border-slate-800/80 relative overflow-hidden">
+    <footer class="py-12 px-6 md:px-12 bg-darkBg border-t border-slate-800/80 relative overflow-hidden">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-left relative z-10">
             <div class="flex items-center space-x-2">
                 <span class="font-bold text-sm text-slate-300">Naod Araya © 2026. All Rights Reserved.</span>
@@ -690,6 +777,37 @@
         if ('ResizeObserver' in window) {
             document.querySelectorAll('.preview-frame').forEach(f => new ResizeObserver(fitPreviews).observe(f.parentElement));
         }
+
+
+        // Light / dark theme toggle (choice is remembered)
+        (function () {
+            const root = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            const icon = document.getElementById('theme-icon');
+            const SUN = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+            const MOON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+            function sync() {
+                const light = root.classList.contains('light');
+                icon.innerHTML = light ? MOON : SUN;
+                const label = light ? 'Switch to dark mode' : 'Switch to light mode';
+                btn.setAttribute('aria-label', label);
+                btn.setAttribute('aria-checked', light ? 'true' : 'false');
+                btn.title = label;
+                if (window.setParticleTheme) window.setParticleTheme(light);
+            }
+            btn.addEventListener('click', () => {
+                root.classList.add('theme-anim');
+                const light = !root.classList.contains('light');
+                root.classList.toggle('light', light);
+                root.classList.toggle('dark', !light);
+                try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (e) {}
+                sync();
+                setTimeout(() => root.classList.remove('theme-anim'), 450);
+            });
+            sync();
+            // the 3D scene is created on DOMContentLoaded: re-sync once it exists
+            window.addEventListener('DOMContentLoaded', sync);
+        })();
 
         // Mobile Menu Toggle
         const menuToggle = document.getElementById('menu-toggle');
@@ -826,6 +944,15 @@
 
                 const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
                 scene.add(particlesMesh);
+
+                // Light mode: additive light-on-white is invisible, so use darker teal with normal blending
+                window.setParticleTheme = function (isLight) {
+                    particlesMaterial.color.set(isLight ? '#009a8c' : '#aaf0e2');
+                    particlesMaterial.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+                    particlesMaterial.opacity = isLight ? 0.7 : 0.8;
+                    particlesMaterial.needsUpdate = true;
+                };
+                window.setParticleTheme(document.documentElement.classList.contains('light'));
 
                 // Mouse interaction
                 let mouseX = 0;
