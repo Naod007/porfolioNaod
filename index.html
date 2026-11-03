@@ -49,11 +49,19 @@
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#070913',
-                        cardBg: 'rgba(18, 24, 43, 0.65)',
-                        neonBlue: '#3b82f6',
-                        neonViolet: '#8b5cf6',
-                        neonCyan: '#06b6d4',
+                        darkBg: '#03100f',
+                        cardBg: 'rgba(8, 30, 32, 0.65)',
+                        neonBlue: '#22e0a0',
+                        neonViolet: '#aaf0e2',
+                        neonCyan: '#00bfae',
+                        /* Cyber Teal */
+                        cyber: { 50:'#ecfffc',100:'#cffff7',200:'#a0fff0',300:'#5eeedd',400:'#1fd9c6',500:'#00bfae',600:'#00998e',700:'#007a72',800:'#00605b',900:'#004a47' },
+                        /* Aqua Foam */
+                        foam:  { 50:'#f2fffc',100:'#e0fbf5',200:'#c9f7ee',300:'#aaf0e2',400:'#8fe8d6',500:'#6fdcc8',600:'#4fc2ae',700:'#3a9d8d',800:'#2c7a6e',900:'#1f5a52' },
+                        /* Electric Seafoam (added accent) */
+                        mint:  { 50:'#effff8',100:'#d3ffeb',200:'#a8fad6',300:'#74f2bd',400:'#3fe8a5',500:'#22e0a0',600:'#12b883',700:'#0e9468',800:'#0b7253',900:'#095a43' },
+                        /* Teal-tinted neutrals */
+                        slate: { 50:'#f0fdfa',100:'#ddf7f2',200:'#bfe8e2',300:'#9ccfca',400:'#7aaeaa',500:'#5a8a88',600:'#3f6563',700:'#2a4a4a',800:'#16302f',900:'#0a1f1f',950:'#041211' },
                     },
                     fontFamily: {
                         sans: ['Space Grotesk', 'Inter', 'sans-serif'],
@@ -74,8 +82,8 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #070913;
-            color: #f3f4f6;
+            background-color: #03100f;
+            color: #e6fffb;
             overflow-x: hidden;
         }
         h1, h2, h3, h4, .brand-font {
@@ -83,40 +91,40 @@
         }
         /* Custom Glassmorphism */
         .glass-panel {
-            background: rgba(18, 24, 43, 0.6);
+            background: rgba(8, 30, 32, 0.6);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(170, 240, 226, 0.15);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
         .glass-panel-hover:hover {
-            border-color: rgba(139, 92, 246, 0.4);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.25);
+            border-color: rgba(170, 240, 226, 0.4);
+            box-shadow: 0 0 25px rgba(170, 240, 226, 0.25);
         }
         /* Futuristic Grid Overlay */
         .grid-bg {
             background-image: 
-                linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+                linear-gradient(to right, rgba(34, 224, 160, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(34, 224, 160, 0.05) 1px, transparent 1px);
             background-size: 40px 40px;
         }
         /* Spotlight Glow */
         .spotlight {
-            background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.18) 0%, rgba(59, 130, 246, 0.08) 35%, transparent 70%);
+            background: radial-gradient(circle at 50% 0%, rgba(170, 240, 226, 0.18) 0%, rgba(34, 224, 160, 0.08) 35%, transparent 70%);
         }
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #070913;
+            background: #03100f;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #16302f;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #3b82f6;
+            background: #00bfae;
         }
         /* Prevent flash before GSAP initializes by hiding hero elements initially */
         .hero-animate-init {
@@ -143,13 +151,13 @@
             width: 36rem;
             height: 36rem;
             margin: -9rem 0 0 -9rem;
-            background: radial-gradient(circle closest-side, rgba(37, 99, 235, 0.16), rgba(37, 99, 235, 0.07) 50%, transparent 100%);
+            background: radial-gradient(circle closest-side, rgba(34, 224, 160, 0.16), rgba(34, 224, 160, 0.07) 50%, transparent 100%);
         }
         .glow-orb-violet {
             width: 40rem;
             height: 40rem;
             margin: 0 -10rem -10rem 0;
-            background: radial-gradient(circle closest-side, rgba(124, 58, 237, 0.16), rgba(124, 58, 237, 0.07) 50%, transparent 100%);
+            background: radial-gradient(circle closest-side, rgba(170, 240, 226, 0.16), rgba(170, 240, 226, 0.07) 50%, transparent 100%);
         }
         /* Glass over the live 3D canvas and the fixed navbar is re-blurred every frame: a lighter radius keeps it smooth */
         #home .glass-panel,
@@ -161,6 +169,19 @@
         #mobile-menu.translate-x-full {
             visibility: hidden;
             transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 300ms;
+        }
+
+
+        /* ===== Live website previews in Projects ===== */
+        .preview-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1280px;
+            border: 0;
+            background: #fff;
+            transform-origin: 0 0;
+            pointer-events: none;
         }
 
         /* ===== Responsive fixes ===== */
@@ -202,18 +223,18 @@
         }
     </style>
 </head>
-<body class="bg-darkBg text-slate-100 selection:bg-violet-500 selection:text-white">
+<body class="bg-darkBg text-slate-100 selection:bg-foam-500 selection:text-white">
 
     <!-- Cinematic Preloader -->
-    <div class="preloader fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070913] px-4">
+    <div class="preloader fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#03100f] px-4">
         <div class="absolute inset-0 spotlight pointer-events-none"></div>
         <div class="relative z-10 flex flex-col items-center max-w-sm w-full">
-            <div class="text-4xl md:text-6xl font-black tracking-tighter bg-gradient-to-r from-blue-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent mb-6 animate-pulse">
+            <div class="text-4xl md:text-6xl font-black tracking-tighter bg-gradient-to-r from-mint-400 via-foam-400 to-cyber-400 bg-clip-text text-transparent mb-6 animate-pulse">
                 NAOD ARAYA
             </div>
             <p class="text-sm font-medium text-slate-400 mb-8 uppercase tracking-widest">Initializing Immersive Environment...</p>
             <div class="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
-                <div class="progress-bar h-full bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-400 rounded-full w-0 shadow-[0_0_15px_rgba(139,92,246,0.8)]"></div>
+                <div class="progress-bar h-full bg-gradient-to-r from-mint-500 via-foam-500 to-cyber-400 rounded-full w-0 shadow-[0_0_15px_rgba(170,240,226,0.8)]"></div>
             </div>
             <div class="mt-4 text-xs font-semibold text-slate-500 tracking-wider flex justify-between w-full">
                 <span>SYSTEM SECURE</span>
@@ -226,20 +247,20 @@
     <header class="fixed top-6 left-0 right-0 z-40 flex justify-center px-4">
         <div class="glass-panel px-8 py-3.5 rounded-full flex items-center justify-between w-full max-w-5xl border border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
             <a href="#home" class="flex items-center space-x-3 group">
-                <span class="font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-cyan-400 transition-colors">Naod Araya</span>
+                <span class="font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-cyber-400 transition-colors">Naod Araya</span>
             </a>
 
             <!-- Desktop Nav Links -->
             <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-300">
-                <a href="#home" class="hover:text-cyan-400 transition-colors">Overview</a>
-                <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
-                <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
-                <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+                <a href="#home" class="hover:text-cyber-400 transition-colors">Overview</a>
+                <a href="#about" class="hover:text-cyber-400 transition-colors">About</a>
+                <a href="#projects" class="hover:text-cyber-400 transition-colors">Projects</a>
+                <a href="#contact" class="hover:text-cyber-400 transition-colors">Contact</a>
             </nav>
 
             <!-- Hire Me CTA & Mobile Toggle -->
             <div class="flex items-center space-x-3">
-                <a href="#contact" class="hidden sm:inline-flex items-center justify-center px-5 py-2 rounded-full font-bold text-xs tracking-wider uppercase bg-white text-slate-900 hover:bg-slate-200 transition-all shadow-md">
+                <a href="#contact" class="hidden sm:inline-flex items-center justify-center px-5 py-2 rounded-full font-bold text-xs tracking-wider uppercase bg-foam-300 text-slate-900 hover:bg-foam-100 transition-all shadow-md">
                     Hire Me
                 </a>
                 <button id="menu-toggle" class="md:hidden text-slate-300 hover:text-white p-1 focus:outline-none" aria-label="Toggle Menu">
@@ -250,15 +271,15 @@
     </header>
 
     <!-- Mobile Fullscreen Menu Tray -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 bg-[#070913]/95 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 px-6 transform translate-x-full transition-transform duration-300 md:hidden">
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-[#03100f]/95 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 px-6 transform translate-x-full transition-transform duration-300 md:hidden">
         <button id="menu-close" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2">
             <i class="ph ph-x text-3xl"></i>
         </button>
-        <a href="#home" class="mobile-nav-link text-2xl font-bold hover:text-cyan-400 transition-colors">Overview</a>
-        <a href="#about" class="mobile-nav-link text-2xl font-bold hover:text-cyan-400 transition-colors">About</a>
-        <a href="#projects" class="mobile-nav-link text-2xl font-bold hover:text-cyan-400 transition-colors">Projects</a>
-        <a href="#contact" class="mobile-nav-link text-2xl font-bold hover:text-cyan-400 transition-colors">Contact</a>
-        <a href="#contact" class="mobile-nav-link px-8 py-3 rounded-full font-bold text-sm bg-white text-slate-900 shadow-lg">Hire Me</a>
+        <a href="#home" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Overview</a>
+        <a href="#about" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">About</a>
+        <a href="#projects" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Projects</a>
+        <a href="#contact" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Contact</a>
+        <a href="#contact" class="mobile-nav-link px-8 py-3 rounded-full font-bold text-sm bg-foam-300 text-slate-900 shadow-lg">Hire Me</a>
     </div>
 
     <!-- Hero Section -->
@@ -273,18 +294,18 @@
 
         <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
             <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full glass-panel text-xs font-semibold text-cyan-400 border border-cyan-500/30 hero-animate-init" id="hero-badge">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full glass-panel text-xs font-semibold text-cyber-400 border border-cyber-500/30 hero-animate-init" id="hero-badge">
+                    <span class="w-2 h-2 rounded-full bg-cyber-400 animate-ping"></span>
                     <span>Front-End Developer • 2+ Years Experience</span>
                 </div>
                 <h1 class="hero-title text-4xl sm:text-6xl xl:text-7xl font-black tracking-tight leading-none hero-animate-init">
-                    Hi, I’m <span class="bg-gradient-to-r from-blue-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent">Naod Araya</span> — Front-End Developer
+                    Hi, I’m <span class="bg-gradient-to-r from-mint-400 via-foam-400 to-cyber-400 bg-clip-text text-transparent">Naod Araya</span> — Front-End Developer
                 </h1>
                 <p class="hero-subtitle text-base sm:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed hero-animate-init">
                     Crafting responsive, performant, and delightful web interfaces with modern JavaScript, CSS animation, and clean architecture.
                 </p>
                 <div class="hero-cta flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4 hero-animate-init">
-                    <a href="#projects" class="px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase bg-gradient-to-r from-blue-600 via-violet-600 to-cyan-600 text-white shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:shadow-[0_0_40px_rgba(139,92,246,0.8)] transition-all transform hover:-translate-y-1">
+                    <a href="#projects" class="px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase bg-gradient-to-r from-mint-600 via-foam-600 to-cyber-600 text-slate-950 shadow-[0_0_30px_rgba(34,224,160,0.5)] hover:shadow-[0_0_40px_rgba(170,240,226,0.8)] transition-all transform hover:-translate-y-1">
                         Explore Work
                     </a>
                     <a href="#contact" class="px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase glass-panel text-slate-200 hover:text-white hover:bg-slate-800/80 transition-all border border-slate-700/60">
@@ -295,8 +316,8 @@
 
             <!-- Hero Visual Frame with Tall Portrait Photo & Bottom-Left Name/Title Placement -->
             <div class="lg:col-span-5 flex justify-center">
-                <div class="relative w-full max-w-sm aspect-[3/4] rounded-3xl glass-panel p-6 flex flex-col justify-between border border-violet-500/30 shadow-[0_0_50px_rgba(139,92,246,0.2)] group hero-animate-init" id="hero-frame">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-violet-500/10 rounded-3xl pointer-events-none"></div>
+                <div class="relative w-full max-w-sm aspect-[3/4] rounded-3xl glass-panel p-6 flex flex-col justify-between border border-foam-500/30 shadow-[0_0_50px_rgba(170,240,226,0.2)] group hero-animate-init" id="hero-frame">
+                    <div class="absolute inset-0 bg-gradient-to-br from-mint-500/10 via-transparent to-foam-500/10 rounded-3xl pointer-events-none"></div>
                     <div class="flex items-center justify-between z-10">
                         <div class="flex space-x-2">
                             <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
@@ -307,20 +328,20 @@
                     </div>
                     <!-- Real Profile Image in Tall Rectangle -->
                     <div class="my-auto flex flex-col items-center z-10 space-y-4">
-                        <div class="w-40 h-56 mx-auto rounded-2xl p-1 bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-400 shadow-[0_0_30px_rgba(59,130,246,0.5)] overflow-hidden">
-                            <img src="/images/naod.png" alt="Naod Araya" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/400x560/1e293b/38bdf8?text=Naod+Araya'">
+                        <div class="w-40 h-56 mx-auto rounded-2xl p-1 bg-gradient-to-r from-mint-500 via-foam-500 to-cyber-400 shadow-[0_0_30px_rgba(34,224,160,0.5)] overflow-hidden">
+                            <img src="/images/naod.png" alt="Naod Araya" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/400x560/0a1f1f/1fd9c6?text=Naod+Araya'">
                         </div>
                     </div>
                     <!-- Name & Title positioned at bottom-left corner above HR and EXP -->
                     <div class="z-10">
                         <div class="w-full text-left mb-0 pb-0">
                             <h3 class="font-bold text-lg text-white m-0 p-0 leading-tight">Naod Araya</h3>
-                            <p class="text-xs text-cyan-400 font-medium m-0 p-0 leading-tight">Front-End Developer</p>
+                            <p class="text-xs text-cyber-400 font-medium m-0 p-0 leading-tight">Front-End Developer</p>
                         </div>
                         <div class="flex justify-between items-center text-xs font-mono text-slate-400 pt-3 border-t border-slate-800/80 mt-2">
                             <span>EXP: 2+ YEARS</span>
-                            <span class="flex items-center space-x-1 text-emerald-400">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="flex items-center space-x-1 text-mint-400">
+                                <span class="w-2 h-2 rounded-full bg-mint-400 animate-pulse"></span>
                                 <span>AVAILABLE</span>
                             </span>
                         </div>
@@ -331,10 +352,10 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-28 px-6 md:px-12 relative bg-[#090d19]/80 border-t border-slate-800/50">
+    <section id="about" class="py-28 px-6 md:px-12 relative bg-[#05191a]/80 border-t border-slate-800/50">
         <div class="max-w-7xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                <span class="text-xs font-bold tracking-widest uppercase text-violet-400 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20">About Me</span>
+                <span class="text-xs font-bold tracking-widest uppercase text-foam-400 px-3 py-1 rounded-full bg-foam-500/10 border border-foam-500/20">About Me</span>
                 <h2 class="text-3xl sm:text-5xl font-black tracking-tight">Professional Background</h2>
                 <p class="text-slate-400 text-base">Focused on creating robust, responsive, and high-performance front-end experiences.</p>
             </div>
@@ -342,12 +363,12 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Left: Tall Portrait Profile Frame -->
                 <div class="lg:col-span-5 flex justify-center">
-                    <div class="relative w-64 h-80 sm:w-72 sm:h-96 rounded-3xl p-1.5 bg-gradient-to-br from-blue-500 via-violet-600 to-cyan-400 shadow-[0_0_50px_rgba(59,130,246,0.3)] transition-transform duration-500 hover:scale-105 overflow-hidden">
+                    <div class="relative w-64 h-80 sm:w-72 sm:h-96 rounded-3xl p-1.5 bg-gradient-to-br from-mint-500 via-foam-600 to-cyber-400 shadow-[0_0_50px_rgba(34,224,160,0.3)] transition-transform duration-500 hover:scale-105 overflow-hidden">
                         <div class="w-full h-full rounded-2xl overflow-hidden bg-slate-900">
-                            <img src="/images/naod.png" alt="Naod Araya" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x560/1e293b/38bdf8?text=Naod+Araya'">
+                            <img src="/images/naod.png" alt="Naod Araya" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x560/0a1f1f/1fd9c6?text=Naod+Araya'">
                         </div>
-                        <div class="absolute -bottom-2 right-4 glass-panel px-4 py-2 rounded-2xl flex items-center space-x-2 border border-violet-500/30 shadow-lg">
-                            <i class="ph ph-code text-cyan-400 text-lg"></i>
+                        <div class="absolute -bottom-2 right-4 glass-panel px-4 py-2 rounded-2xl flex items-center space-x-2 border border-foam-500/30 shadow-lg">
+                            <i class="ph ph-code text-cyber-400 text-lg"></i>
                             <span class="text-xs font-bold">2+ Years Experience</span>
                         </div>
                     </div>
@@ -369,28 +390,28 @@
                     <div class="space-y-4">
                         <h4 class="text-sm font-bold tracking-wider uppercase text-slate-400">Core Expertise & Technologies</h4>
                         <div id="skills-grid" class="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-3 gap-4">
-                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-blue-500/50 hover:bg-slate-800/50">
-                                <i class="ph ph-file-js text-2xl text-yellow-400"></i>
+                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-mint-500/50 hover:bg-slate-800/50">
+                                <i class="ph ph-file-js text-2xl text-foam-400"></i>
                                 <span class="font-semibold text-sm">JavaScript (ES6+)</span>
                             </div>
-                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-blue-500/50 hover:bg-slate-800/50">
-                                <i class="ph ph-atom text-2xl text-cyan-400"></i>
+                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-mint-500/50 hover:bg-slate-800/50">
+                                <i class="ph ph-atom text-2xl text-cyber-400"></i>
                                 <span class="font-semibold text-sm">Modern Frameworks</span>
                             </div>
-                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-blue-500/50 hover:bg-slate-800/50">
-                                <i class="ph ph-wind text-2xl text-teal-400"></i>
+                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-mint-500/50 hover:bg-slate-800/50">
+                                <i class="ph ph-wind text-2xl text-cyber-400"></i>
                                 <span class="font-semibold text-sm">Tailwind CSS</span>
                             </div>
-                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-blue-500/50 hover:bg-slate-800/50">
-                                <i class="ph ph-sparkle text-2xl text-violet-400"></i>
+                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-mint-500/50 hover:bg-slate-800/50">
+                                <i class="ph ph-sparkle text-2xl text-foam-400"></i>
                                 <span class="font-semibold text-sm">Web Animation</span>
                             </div>
-                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-blue-500/50 hover:bg-slate-800/50">
-                                <i class="ph ph-devices text-2xl text-amber-400"></i>
+                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-mint-500/50 hover:bg-slate-800/50">
+                                <i class="ph ph-devices text-2xl text-mint-400"></i>
                                 <span class="font-semibold text-sm">Responsive UI</span>
                             </div>
-                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-blue-500/50 hover:bg-slate-800/50">
-                                <i class="ph ph-check-circle text-2xl text-emerald-400"></i>
+                            <div class="skill-card glass-panel p-4 rounded-2xl flex items-center space-x-3 border border-slate-800 transition-colors hover:border-mint-500/50 hover:bg-slate-800/50">
+                                <i class="ph ph-check-circle text-2xl text-mint-400"></i>
                                 <span class="font-semibold text-sm">Clean Code</span>
                             </div>
                         </div>
@@ -401,11 +422,11 @@
     </section>
 
     <!-- Projects Section with Real URLs -->
-    <section id="projects" class="py-28 px-6 md:px-12 relative bg-[#070913] overflow-hidden">
+    <section id="projects" class="py-28 px-6 md:px-12 relative bg-[#03100f] overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="space-y-4">
-                    <span class="text-xs font-bold tracking-widest uppercase text-cyan-400 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20">Portfolio</span>
+                    <span class="text-xs font-bold tracking-widest uppercase text-cyber-400 px-3 py-1 rounded-full bg-cyber-500/10 border border-cyber-500/20">Portfolio</span>
                     <h2 class="text-3xl sm:text-5xl font-black tracking-tight">Featured Projects</h2>
                 </div>
                 <p class="text-slate-400 max-w-md text-sm">
@@ -417,20 +438,23 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Project 1: AURA Marketplace -->
                 <div class="project-card glass-panel glass-panel-hover rounded-3xl overflow-hidden flex flex-col justify-between border border-slate-800 transition-[border-color,box-shadow] duration-300 group">
-                    <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-blue-900/30 to-slate-900">
-                        <i class="ph ph-shopping-bag text-6xl text-cyan-400 group-hover:scale-110 transition-transform duration-500"></i>
-                        <span class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold glass-panel text-cyan-400 border border-cyan-500/30">E-Commerce</span>
+                    <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center bg-gradient-to-br from-cyber-900/30 to-slate-900">
+                        <!-- icon stays behind as a fallback while the page loads -->
+                        <i class="ph ph-shopping-bag text-6xl text-cyber-400 group-hover:scale-110 transition-transform duration-500"></i>
+                        <iframe class="preview-frame" src="https://shoppingaura.vercel.app" title="AURA Marketplace live preview" loading="lazy" tabindex="-1" aria-hidden="true" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>
+                        <a href="https://shoppingaura.vercel.app" target="_blank" rel="noopener noreferrer" class="absolute inset-0 z-10" aria-label="Open AURA Marketplace"></a>
+                        <span class="absolute top-4 right-4 z-20 px-3 py-1 rounded-full text-xs font-bold glass-panel text-cyber-400 border border-cyber-500/30">E-Commerce</span>
                     </div>
                     <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
                         <div class="space-y-2">
-                            <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">AURA Marketplace</h3>
+                            <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">AURA Marketplace</h3>
                             <p class="text-slate-400 text-sm">A modern e-commerce marketplace with product discovery, categories, search, wishlist, cart, account features, and a calm modern shopping experience.</p>
                         </div>
                         <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-x-3 gap-y-3">
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-slate-400">
                                 <span>HTML</span> • <span>CSS</span> • <span>JavaScript</span>
                             </div>
-                            <a href="https://shoppingaura.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-cyan-400 hover:bg-cyan-500 hover:text-white transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)] text-xs font-bold uppercase tracking-wider">
+                            <a href="https://shoppingaura.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-cyber-400 hover:bg-cyber-500 hover:text-slate-950 transition-all shadow-[0_0_15px_rgba(0,191,174,0.3)] text-xs font-bold uppercase tracking-wider">
                                 <span>Live Demo</span>
                                 <i class="ph ph-arrow-up-right text-sm"></i>
                             </a>
@@ -440,20 +464,23 @@
 
                 <!-- Project 2: Ethio Smooth Coffee House -->
                 <div class="project-card glass-panel glass-panel-hover rounded-3xl overflow-hidden flex flex-col justify-between border border-slate-800 transition-[border-color,box-shadow] duration-300 group">
-                    <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-amber-900/30 to-slate-900">
-                        <i class="ph ph-coffee text-6xl text-amber-400 group-hover:scale-110 transition-transform duration-500"></i>
-                        <span class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold glass-panel text-amber-400 border border-amber-500/30">Artisanal Cafe</span>
+                    <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center bg-gradient-to-br from-mint-900/30 to-slate-900">
+                        <!-- icon stays behind as a fallback while the page loads -->
+                        <i class="ph ph-coffee text-6xl text-mint-400 group-hover:scale-110 transition-transform duration-500"></i>
+                        <iframe class="preview-frame" src="https://coffeeshop-eosin-beta.vercel.app" title="Ethio Smooth Coffee House live preview" loading="lazy" tabindex="-1" aria-hidden="true" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>
+                        <a href="https://coffeeshop-eosin-beta.vercel.app" target="_blank" rel="noopener noreferrer" class="absolute inset-0 z-10" aria-label="Open Ethio Smooth Coffee House"></a>
+                        <span class="absolute top-4 right-4 z-20 px-3 py-1 rounded-full text-xs font-bold glass-panel text-mint-400 border border-mint-500/30">Artisanal Cafe</span>
                     </div>
                     <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
                         <div class="space-y-2">
-                            <h3 class="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">Ethio Smooth Coffee House</h3>
+                            <h3 class="text-xl font-bold text-white group-hover:text-mint-400 transition-colors">Ethio Smooth Coffee House</h3>
                             <p class="text-slate-400 text-sm">A premium Ethiopian coffee-house experience featuring the coffee story, signature menu, ordering interaction, locations, and a warm editorial visual style.</p>
                         </div>
                         <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-x-3 gap-y-3">
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-slate-400">
                                 <span>UI Design</span> • <span>JavaScript</span> • <span>Tailwind</span>
                             </div>
-                            <a href="https://coffeeshop-eosin-beta.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-amber-400 hover:bg-amber-500 hover:text-white transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)] text-xs font-bold uppercase tracking-wider">
+                            <a href="https://coffeeshop-eosin-beta.vercel.app" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-mint-400 hover:bg-mint-500 hover:text-slate-950 transition-all shadow-[0_0_15px_rgba(34,224,160,0.3)] text-xs font-bold uppercase tracking-wider">
                                 <span>Live Demo</span>
                                 <i class="ph ph-arrow-up-right text-sm"></i>
                             </a>
@@ -463,20 +490,23 @@
 
                 <!-- Project 3: Texsenss -->
                 <div class="project-card glass-panel glass-panel-hover rounded-3xl overflow-hidden flex flex-col justify-between border border-slate-800 transition-[border-color,box-shadow] duration-300 group">
-                    <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-violet-900/30 to-slate-900">
-                        <i class="ph ph-cpu text-6xl text-violet-400 group-hover:scale-110 transition-transform duration-500"></i>
-                        <span class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold glass-panel text-violet-400 border border-violet-500/30">AI & Outsourcing</span>
+                    <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center bg-gradient-to-br from-foam-900/30 to-slate-900">
+                        <!-- icon stays behind as a fallback while the page loads -->
+                        <i class="ph ph-cpu text-6xl text-foam-400 group-hover:scale-110 transition-transform duration-500"></i>
+                        <iframe class="preview-frame" src="https://www.texsenss.com" title="Texsenss live preview" loading="lazy" tabindex="-1" aria-hidden="true" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>
+                        <a href="https://www.texsenss.com" target="_blank" rel="noopener noreferrer" class="absolute inset-0 z-10" aria-label="Open Texsenss"></a>
+                        <span class="absolute top-4 right-4 z-20 px-3 py-1 rounded-full text-xs font-bold glass-panel text-foam-400 border border-foam-500/30">AI & Outsourcing</span>
                     </div>
                     <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
                         <div class="space-y-2">
-                            <h3 class="text-xl font-bold text-white group-hover:text-violet-400 transition-colors">Texsenss</h3>
+                            <h3 class="text-xl font-bold text-white group-hover:text-foam-400 transition-colors">Texsenss</h3>
                             <p class="text-slate-400 text-sm">An AI-powered technology outsourcing website focused on software development, cloud infrastructure, applied AI, product design, and full product lifecycle delivery.</p>
                         </div>
                         <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-x-3 gap-y-3">
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-slate-400">
                                 <span>Front-End</span> • <span>AI Solutions</span> • <span>Cloud</span>
                             </div>
-                            <a href="https://www.texsenss.com" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-violet-400 hover:bg-violet-500 hover:text-white transition-all shadow-[0_0_15px_rgba(139,92,246,0.3)] text-xs font-bold uppercase tracking-wider">
+                            <a href="https://www.texsenss.com" target="_blank" rel="noopener noreferrer" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full glass-panel flex items-center space-x-1.5 text-foam-400 hover:bg-foam-500 hover:text-slate-950 transition-all shadow-[0_0_15px_rgba(170,240,226,0.3)] text-xs font-bold uppercase tracking-wider">
                                 <span>Live Demo</span>
                                 <i class="ph ph-arrow-up-right text-sm"></i>
                             </a>
@@ -488,12 +518,12 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-28 px-6 md:px-12 relative bg-[#090d19]/80 border-t border-slate-800/50">
+    <section id="contact" class="py-28 px-6 md:px-12 relative bg-[#05191a]/80 border-t border-slate-800/50">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Left: Info & Real Email -->
                 <div class="lg:col-span-5 space-y-6">
-                    <span class="text-xs font-bold tracking-widest uppercase text-violet-400 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20">Get In Touch</span>
+                    <span class="text-xs font-bold tracking-widest uppercase text-foam-400 px-3 py-1 rounded-full bg-foam-500/10 border border-foam-500/20">Get In Touch</span>
                     <h2 class="text-3xl sm:text-5xl font-black tracking-tight">Let's build something meaningful.</h2>
                     <p class="text-slate-400 text-sm leading-relaxed">
                         Looking for a front-end developer for roles, projects, or collaborations? Reach out directly via email or send a message below.
@@ -502,22 +532,22 @@
                     <div class="space-y-4 pt-4">
                         <div class="flex flex-wrap items-center justify-between gap-3 glass-panel p-4 rounded-2xl border border-slate-800">
                             <div class="flex items-center space-x-4 min-w-0">
-                                <div class="w-12 h-12 shrink-0 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xl">
+                                <div class="w-12 h-12 shrink-0 rounded-xl bg-mint-500/10 border border-mint-500/20 flex items-center justify-center text-mint-400 text-xl">
                                     <i class="ph ph-envelope-simple"></i>
                                 </div>
                                 <div class="min-w-0">
                                     <p class="text-xs text-slate-400 font-medium">Direct Email</p>
-                                    <a href="mailto:naodaraya07@gmail.com" class="font-semibold text-sm break-all hover:text-cyan-400 transition-colors">naodaraya07@gmail.com</a>
+                                    <a href="mailto:naodaraya07@gmail.com" class="font-semibold text-sm break-all hover:text-cyber-400 transition-colors">naodaraya07@gmail.com</a>
                                 </div>
                             </div>
-                            <button onclick="copyEmail()" class="shrink-0 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-cyan-400 transition-colors">
+                            <button onclick="copyEmail()" class="shrink-0 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-cyber-400 transition-colors">
                                 Copy Email
                             </button>
                         </div>
-                        <div id="copy-notification" class="hidden text-xs text-emerald-400 font-medium pl-2">Email copied!</div>
+                        <div id="copy-notification" class="hidden text-xs text-mint-400 font-medium pl-2">Email copied!</div>
 
                         <div class="flex items-center space-x-4 glass-panel p-4 rounded-2xl border border-slate-800">
-                            <div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 text-xl">
+                            <div class="w-12 h-12 rounded-xl bg-foam-500/10 border border-foam-500/20 flex items-center justify-center text-foam-400 text-xl">
                                 <i class="ph ph-map-pin"></i>
                             </div>
                             <div>
@@ -541,25 +571,25 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Your Name</label>
-                                <input type="text" id="form-name" required placeholder="John Doe" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm">
+                                <input type="text" id="form-name" required placeholder="John Doe" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyber-500 focus:ring-1 focus:ring-cyber-500 transition-all text-sm">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Your Email</label>
-                                <input type="email" id="form-email" required placeholder="john@example.com" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm">
+                                <input type="email" id="form-email" required placeholder="john@example.com" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyber-500 focus:ring-1 focus:ring-cyber-500 transition-all text-sm">
                             </div>
                         </div>
 
                         <div class="space-y-2">
                             <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Subject</label>
-                            <input type="text" id="form-subject" required placeholder="Project Collaboration / Role" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm">
+                            <input type="text" id="form-subject" required placeholder="Project Collaboration / Role" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyber-500 focus:ring-1 focus:ring-cyber-500 transition-all text-sm">
                         </div>
 
                         <div class="space-y-2">
                             <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Message</label>
-                            <textarea id="form-message" rows="4" required placeholder="Write your message here..." class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm resize-none"></textarea>
+                            <textarea id="form-message" rows="4" required placeholder="Write your message here..." class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-cyber-500 focus:ring-1 focus:ring-cyber-500 transition-all text-sm resize-none"></textarea>
                         </div>
 
-                        <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl font-bold text-sm tracking-wider uppercase bg-gradient-to-r from-blue-600 via-violet-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-[0_0_25px_rgba(59,130,246,0.5)] hover:shadow-[0_0_35px_rgba(139,92,246,0.8)] transition-all transform hover:-translate-y-0.5">
+                        <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl font-bold text-sm tracking-wider uppercase bg-gradient-to-r from-mint-600 via-foam-600 to-cyber-600 hover:from-mint-500 hover:to-cyber-500 text-slate-950 shadow-[0_0_25px_rgba(34,224,160,0.5)] hover:shadow-[0_0_35px_rgba(170,240,226,0.8)] transition-all transform hover:-translate-y-0.5">
                             Send Message
                         </button>
 
@@ -571,21 +601,21 @@
     </section>
 
     <!-- Footer Section -->
-    <footer class="py-12 px-6 md:px-12 bg-[#070913] border-t border-slate-800/80 relative overflow-hidden">
+    <footer class="py-12 px-6 md:px-12 bg-[#03100f] border-t border-slate-800/80 relative overflow-hidden">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-left relative z-10">
             <div class="flex items-center space-x-2">
                 <span class="font-bold text-sm text-slate-300">Naod Araya © 2026. All Rights Reserved.</span>
             </div>
 
             <div class="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-8 gap-y-2 text-sm text-slate-400">
-                <a href="#home" class="hover:text-cyan-400 transition-colors">Overview</a>
-                <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
-                <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
-                <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+                <a href="#home" class="hover:text-cyber-400 transition-colors">Overview</a>
+                <a href="#about" class="hover:text-cyber-400 transition-colors">About</a>
+                <a href="#projects" class="hover:text-cyber-400 transition-colors">Projects</a>
+                <a href="#contact" class="hover:text-cyber-400 transition-colors">Contact</a>
             </div>
 
             <div class="flex items-center space-x-4">
-                <a href="mailto:naodaraya07@gmail.com" class="text-slate-400 hover:text-cyan-400 transition-colors text-sm font-semibold">
+                <a href="mailto:naodaraya07@gmail.com" class="text-slate-400 hover:text-cyber-400 transition-colors text-sm font-semibold">
                     naodaraya07@gmail.com
                 </a>
             </div>
@@ -623,6 +653,24 @@
             }
         }
 
+
+        // Live project previews: render each site at desktop width, then scale it to fit its card
+        function fitPreviews() {
+            document.querySelectorAll('.preview-frame').forEach(frame => {
+                const box = frame.parentElement;
+                const scale = box.clientWidth / 1280;
+                if (!scale) return;
+                frame.style.transform = 'scale(' + scale + ')';
+                frame.style.height = (box.clientHeight / scale) + 'px';
+            });
+        }
+        fitPreviews();
+        window.addEventListener('resize', fitPreviews);
+        window.addEventListener('load', fitPreviews);
+        if ('ResizeObserver' in window) {
+            document.querySelectorAll('.preview-frame').forEach(f => new ResizeObserver(fitPreviews).observe(f.parentElement));
+        }
+
         // Mobile Menu Toggle
         const menuToggle = document.getElementById('menu-toggle');
         const menuClose = document.getElementById('menu-close');
@@ -648,7 +696,7 @@
         function showFormMessage(type, text) {
             const msgBox = document.getElementById('form-message-box');
             const styles = type === 'success'
-                ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                ? "bg-mint-500/10 border border-mint-500/30 text-mint-400"
                 : "bg-red-500/10 border border-red-500/30 text-red-400";
             msgBox.className = "p-4 rounded-xl text-center text-sm font-semibold " + styles;
             msgBox.innerText = text;
@@ -750,7 +798,7 @@
 
                 const particlesMaterial = new THREE.PointsMaterial({
                     size: 0.025,
-                    color: '#8b5cf6',
+                    color: '#aaf0e2',
                     transparent: true,
                     opacity: 0.8,
                     blending: THREE.AdditiveBlending
