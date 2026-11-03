@@ -242,6 +242,32 @@
             box-shadow: 0 2px 6px rgba(0, 100, 90, 0.35);
         }
 
+
+        /* ===== Theme wipe: a line sweeps across and reveals the new theme ===== */
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+        ::view-transition-old(root) { z-index: 1; }
+        ::view-transition-new(root) { z-index: 2; }
+        ::view-transition-group(theme-line),
+        ::view-transition-old(theme-line),
+        ::view-transition-new(theme-line) { animation: none; }
+        ::view-transition-group(theme-line) { z-index: 10; }
+        #theme-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100vh;
+            margin-left: -1px;
+            z-index: 9999;
+            pointer-events: none;
+            view-transition-name: theme-line;
+            background: #f4fbfa; /* colour is set per direction in JS */
+        }
+
         /* ===== Light mode ===== */
         html.light body { background-color: #f4fbfa; color: #06282a; }
         html.light .glass-panel {
@@ -268,13 +294,6 @@
         html.light .text-white,
         html.light .hover\:text-white:hover { color: #06282a; }
 
-        /* keep the switch knob sliding while the page colours fade */
-        html.theme-anim .theme-knob { transition: transform .35s cubic-bezier(0.4, 0, 0.2, 1), background .35s ease, color .35s ease, box-shadow .35s ease !important; }
-
-        /* Smooth colour change when the toggle is pressed */
-        html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
-            transition: background-color .35s ease, border-color .35s ease, color .35s ease, box-shadow .35s ease !important;
-        }
 
         /* ===== Responsive fixes ===== */
         /* Hero: use the small viewport height so mobile browser toolbars don't cause jumps */
@@ -801,14 +820,46 @@
                 btn.title = label;
                 if (window.setParticleTheme) window.setParticleTheme(light);
             }
-            btn.addEventListener('click', () => {
-                root.classList.add('theme-anim');
-                const light = !root.classList.contains('light');
+            let busy = false;
+            function applyTheme(light) {
                 root.classList.toggle('light', light);
                 root.classList.toggle('dark', !light);
                 try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (e) {}
                 sync();
-                setTimeout(() => root.classList.remove('theme-anim'), 450);
+            }
+            btn.addEventListener('click', () => {
+                if (busy) return; // ignore extra clicks while the wipe is running (no stacking)
+                const light = !root.classList.contains('light');
+                const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                // Browsers without View Transitions (or reduced motion): switch instantly
+                if (!document.startViewTransition || reduce) { applyTheme(light); return; }
+
+                busy = true;
+                const DURATION = 850, EASE = 'cubic-bezier(0.65, 0, 0.35, 1)';
+                const line = document.createElement('div');
+                line.id = 'theme-line';
+                // The line takes the colour of the mode being left: going dark -> light-mode colour, going light -> dark-mode colour
+                const lineColor = light ? '#03100f' : '#f4fbfa';
+                line.style.background = lineColor;
+                line.style.boxShadow = '0 0 6px 1px ' + (light ? 'rgba(3, 16, 15, 0.55)' : 'rgba(244, 251, 250, 0.75)');
+                document.body.appendChild(line);
+
+                const vt = document.startViewTransition(() => applyTheme(light));
+                vt.ready.then(() => {
+                    // new theme is revealed from left to right...
+                    root.animate(
+                        { clipPath: ['inset(0 100% 0 0)', 'inset(0 0 0 0)'] },
+                        { duration: DURATION, easing: EASE, pseudoElement: '::view-transition-new(root)', fill: 'forwards' }
+                    );
+                    // ...and the line rides the edge of the reveal
+                    root.animate(
+                        { transform: ['translateX(0px)', 'translateX(' + window.innerWidth + 'px)'] },
+                        { duration: DURATION, easing: EASE, pseudoElement: '::view-transition-group(theme-line)', fill: 'forwards' }
+                    );
+                }).catch(() => {});
+                const done = () => { line.remove(); busy = false; };
+                vt.finished.then(done, done);
             });
             sync();
             // the 3D scene is created on DOMContentLoaded: re-sync once it exists
