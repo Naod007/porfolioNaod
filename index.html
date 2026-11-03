@@ -96,7 +96,9 @@
             background-color: #03100f;
             color: #e6fffb;
             overflow-x: hidden;
+            overflow-x: clip;
         }
+        html { overflow-x: clip; max-width: 100%; }
         h1, h2, h3, h4, .brand-font {
             font-family: 'Space Grotesk', sans-serif;
         }
@@ -176,12 +178,37 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
-        /* Closed mobile menu is fully hidden (no rendering, no keyboard focus) until opened */
-        #mobile-menu.translate-x-full {
-            visibility: hidden;
-            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 300ms;
-        }
 
+
+
+        /* ===== Navbar dropdown (mobile) ===== */
+        #mobile-menu {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-10px) scale(0.98);
+            transform-origin: top center;
+            transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s;
+            background: rgba(8, 30, 32, 0.95);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            max-height: calc(100vh - 7rem);
+            max-height: calc(100svh - 7rem);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: none;
+            transition: opacity .25s ease, transform .25s ease, visibility 0s;
+        }
+        html.light #mobile-menu { background: rgba(255, 255, 255, 0.96); }
+        #mobile-menu .mobile-nav-link:not(.mobile-cta):hover { background: rgba(0, 191, 174, 0.12); }
+        #menu-toggle .icon-close { display: none; }
+        #menu-toggle.open .icon-open { display: none; }
+        #menu-toggle.open .icon-close { display: block; }
 
         /* ===== Live website previews in Projects ===== */
         .preview-frame {
@@ -307,21 +334,6 @@
             height: 100%;
             display: block;
         }
-        /* Mobile menu: scrollable on short screens (e.g. landscape phones) and no scroll-chaining to the page */
-        #mobile-menu {
-            overflow-y: auto;
-            overscroll-behavior: contain;
-        }
-        @media (max-height: 520px) {
-            #mobile-menu {
-                justify-content: flex-start;
-                padding-top: 4.5rem;
-                padding-bottom: 2rem;
-            }
-            #mobile-menu > a {
-                margin-top: 1rem;
-            }
-        }
         @media (max-width: 639px) {
             /* 16px inputs stop iOS Safari from zooming the page on focus */
             #contact-form input,
@@ -355,14 +367,15 @@
     </div>
 
     <!-- Wider Navbar (Clean Brand Name without square box) -->
-    <header class="fixed top-6 left-0 right-0 z-40 flex justify-center px-4">
-        <div class="glass-panel px-8 py-3.5 rounded-full flex items-center justify-between w-full max-w-5xl border border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
+    <header class="fixed top-4 sm:top-6 left-0 right-0 z-40 flex justify-center px-3 sm:px-4">
+        <div class="relative w-full max-w-5xl">
+        <div class="glass-panel px-5 sm:px-8 py-3 sm:py-3.5 rounded-full flex items-center justify-between w-full border border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
             <a href="#home" class="flex items-center space-x-3 group">
                 <span class="font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-cyber-400 transition-colors">Naod Araya</span>
             </a>
 
             <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-300">
+            <nav class="hidden md:flex items-center space-x-5 lg:space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-300">
                 <a href="#home" class="hover:text-cyber-400 transition-colors">Overview</a>
                 <a href="#about" class="hover:text-cyber-400 transition-colors">About</a>
                 <a href="#projects" class="hover:text-cyber-400 transition-colors">Projects</a>
@@ -375,24 +388,22 @@
                 <a href="#contact" class="hidden sm:inline-flex items-center justify-center px-5 py-2 rounded-full font-bold text-xs tracking-wider uppercase bg-[#aaf0e2] text-[#0a1f1f] hover:bg-[#e0fbf5] transition-all shadow-md">
                     Hire Me
                 </a>
-                <button id="menu-toggle" class="md:hidden text-slate-300 hover:text-white p-1 focus:outline-none" aria-label="Toggle Menu">
-                    <i class="ph ph-list text-2xl"></i>
+                <button id="menu-toggle" type="button" class="md:hidden shrink-0 text-slate-300 hover:text-cyber-400 p-1 focus:outline-none" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="icon-open" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                    <svg class="icon-close" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
                 </button>
             </div>
         </div>
+        <!-- Mobile dropdown (opens right under the navbar) -->
+        <div id="mobile-menu" class="absolute left-0 right-0 top-full mt-3 rounded-3xl border border-slate-700/50 shadow-[0_8px_30px_rgba(0,0,0,0.35)] p-3 flex flex-col gap-1 md:hidden" aria-hidden="true">
+            <a href="#home" class="mobile-nav-link block px-4 py-3 rounded-2xl text-base font-semibold hover:text-cyber-400 transition-colors">Overview</a>
+            <a href="#about" class="mobile-nav-link block px-4 py-3 rounded-2xl text-base font-semibold hover:text-cyber-400 transition-colors">About</a>
+            <a href="#projects" class="mobile-nav-link block px-4 py-3 rounded-2xl text-base font-semibold hover:text-cyber-400 transition-colors">Projects</a>
+            <a href="#contact" class="mobile-nav-link block px-4 py-3 rounded-2xl text-base font-semibold hover:text-cyber-400 transition-colors">Contact</a>
+            <a href="#contact" class="mobile-nav-link mobile-cta mt-2 flex items-center justify-center px-6 py-3 rounded-full font-bold text-sm uppercase tracking-wider bg-[#aaf0e2] text-[#0a1f1f] shadow-md">Hire Me</a>
+        </div>
+        </div>
     </header>
-
-    <!-- Mobile Fullscreen Menu Tray -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 bg-darkBg/95 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 px-6 transform translate-x-full transition-transform duration-300 md:hidden">
-        <button id="menu-close" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2">
-            <i class="ph ph-x text-3xl"></i>
-        </button>
-        <a href="#home" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Overview</a>
-        <a href="#about" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">About</a>
-        <a href="#projects" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Projects</a>
-        <a href="#contact" class="mobile-nav-link text-2xl font-bold hover:text-cyber-400 transition-colors">Contact</a>
-        <a href="#contact" class="mobile-nav-link px-8 py-3 rounded-full font-bold text-sm bg-[#aaf0e2] text-[#0a1f1f] shadow-lg">Hire Me</a>
-    </div>
 
     <!-- Hero Section -->
     <section id="home" class="relative min-h-screen flex items-center justify-center pt-28 pb-20 px-6 md:px-12 grid-bg overflow-hidden">
@@ -866,26 +877,26 @@
             window.addEventListener('DOMContentLoaded', sync);
         })();
 
-        // Mobile Menu Toggle
+        // Mobile dropdown
         const menuToggle = document.getElementById('menu-toggle');
-        const menuClose = document.getElementById('menu-close');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
-        function toggleMenu() {
-            const isOpen = mobileMenu.classList.contains('translate-x-0');
-            if (isOpen) {
-                mobileMenu.classList.remove('translate-x-0');
-                mobileMenu.classList.add('translate-x-full');
-            } else {
-                mobileMenu.classList.remove('translate-x-full');
-                mobileMenu.classList.add('translate-x-0');
-            }
+        function setMenu(open) {
+            mobileMenu.classList.toggle('open', open);
+            menuToggle.classList.toggle('open', open);
+            menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            mobileMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
         }
-
-        menuToggle.addEventListener('click', toggleMenu);
-        menuClose.addEventListener('click', toggleMenu);
-        mobileNavLinks.forEach(link => link.addEventListener('click', toggleMenu));
+        menuToggle.addEventListener('click', (e) => { e.stopPropagation(); setMenu(!mobileMenu.classList.contains('open')); });
+        mobileNavLinks.forEach(link => link.addEventListener('click', () => setMenu(false)));
+        // close when tapping outside, pressing Esc, or growing to the desktop layout
+        document.addEventListener('click', (e) => {
+            if (mobileMenu.classList.contains('open') && !mobileMenu.contains(e.target)) setMenu(false);
+        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+        window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
 
         // Form Submit Handler: emails the visitor's name, email, subject and message to you
         function showFormMessage(type, text) {
