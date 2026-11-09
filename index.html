@@ -701,7 +701,7 @@
                     </div>
                 </div>
 
-                <!-- Right: Contact Form (delivers to your inbox via FormSubmit) -->
+                <!-- Right: Contact Form (delivers to your inbox via FormSubmit, with a mail-app fallback) -->
                 <div class="lg:col-span-7">
                     <form id="contact-form" onsubmit="handleFormSubmit(event)" class="glass-panel p-6 sm:p-10 rounded-3xl border border-slate-800 space-y-6 shadow-2xl relative">
                         <!-- Spam trap: hidden from real visitors -->
@@ -898,14 +898,31 @@
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
         window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
 
-        // Form Submit Handler: emails the visitor's name, email, subject and message to you
-        function showFormMessage(type, text) {
+        // ===== Contact form =====
+        // Shows a status message. If a mailto link is given, a "Send with my email app" button is added
+        // so the visitor can still reach you even when the form service is unavailable.
+        function showFormMessage(type, text, mailtoHref) {
             const msgBox = document.getElementById('form-message-box');
             const styles = type === 'success'
                 ? "bg-mint-500/10 border border-mint-500/30 text-mint-400"
                 : "bg-red-500/10 border border-red-500/30 text-red-400";
             msgBox.className = "p-4 rounded-xl text-center text-sm font-semibold " + styles;
-            msgBox.innerText = text;
+            msgBox.textContent = text;
+            if (mailtoHref) {
+                const link = document.createElement('a');
+                link.href = mailtoHref;
+                link.textContent = "Send with my email app instead";
+                link.className = "block mt-3 underline underline-offset-4 text-cyber-400 hover:text-mint-400";
+                msgBox.appendChild(link);
+            }
+            msgBox.classList.remove('hidden');
+        }
+
+        function buildMailto(name, email, subject, message) {
+            const body = message + "\n\n— " + name + " (" + email + ")";
+            return "mailto:" + CONTACT_EMAIL +
+                "?subject=" + encodeURIComponent("Portfolio message: " + subject) +
+                "&body=" + encodeURIComponent(body);
         }
 
         async function handleFormSubmit(e) {
@@ -920,38 +937,53 @@
             const email = document.getElementById('form-email').value.trim();
             const subject = document.getElementById('form-subject').value.trim();
             const message = document.getElementById('form-message').value.trim();
+            const mailto = buildMailto(name, email, subject, message);
 
             btn.disabled = true;
-            btn.innerText = "Sending...";
+            btn.textContent = "Sending...";
             document.getElementById('form-message-box').classList.add('hidden');
 
             try {
+                // FormData (multipart) is the most reliable format for FormSubmit's AJAX endpoint
+                const fd = new FormData();
+                fd.append("name", name);
+                fd.append("email", email);              // used as the Reply-To address
+                fd.append("subject", subject);
+                fd.append("message", message);
+                fd.append("_subject", "Portfolio message: " + subject);
+                fd.append("_replyto", email);
+                fd.append("_template", "table");
+                fd.append("_captcha", "false");
+
                 const res = await fetch(FORM_ENDPOINT, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,            // FormSubmit uses this as the Reply-To address
-                        subject: subject,
-                        message: message,
-                        _subject: "Portfolio message: " + subject,
-                        _template: "table",
-                        _captcha: "false"
-                    })
+                    headers: { "Accept": "application/json" },
+                    body: fd
                 });
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok || data.success === false || data.success === "false") {
-                    throw new Error(data.message || "Request failed");
+
+                let data = {};
+                try { data = await res.json(); } catch (_) {}
+
+                const ok = res.ok && data.success !== false && data.success !== "false";
+                if (!ok) {
+                    const serverMsg = String(data.message || "");
+                    const err = new Error(serverMsg || ("HTTP " + res.status));
+                    err.serverMsg = serverMsg;
+                    throw err;
                 }
+
                 showFormMessage('success', "Message sent successfully! I'll get back to you soon.");
                 form.reset();
             } catch (err) {
                 console.error("Contact form error:", err);
-                showFormMessage('error', "Sorry, your message couldn't be sent. Please try again or email " + CONTACT_EMAIL + " directly.");
+                const needsActivation = /activat/i.test(err.serverMsg || err.message || "");
+                const text = needsActivation
+                    ? "The form is waiting for its one-time email activation. Please use the button below to send your message in the meantime."
+                    : "Sorry, your message couldn't be sent from here. Use the button below to send it with your email app, or write to " + CONTACT_EMAIL + " directly.";
+                showFormMessage('error', text, mailto);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "Send Message";
-                document.getElementById('form-message-box').classList.remove('hidden');
+                btn.textContent = "Send Message";
             }
         }
 
